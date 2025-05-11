@@ -87,7 +87,7 @@ class ResidualBlock(nn.Module):
         return out + x
 
 class Generator(nn.Module):
-    def __init__(self, in_channels=3, num_channels = 64, num_blocks=16):
+    def __init__(self, in_channels=1, num_channels = 64, num_blocks=16):
         super().__init__()
         self.initial = ConvBlock(in_channels, num_channels, kernel_size=9, stride=1, padding=4, use_bn=False)
         self.residuals = nn.Sequential(*[ResidualBlock(num_channels) for _ in range(num_blocks)])
@@ -135,10 +135,11 @@ class Discriminator(nn.Module):
 def test(): 
     low_resolution = 24 
     with torch.amp.autocast("cuda"):
-        x = torch.randn((5, 3, low_resolution, low_resolution))
-        gen = Generator()
+        x = torch.randn((1, 1, low_resolution, low_resolution))
+        print('AAAAAA', x.shape)
+        gen = Generator(in_channels=1)
         gen_out = gen(x)
-        disc = Discriminator()
+        disc = Discriminator(in_channels=1)
         disc_out = disc(gen_out)
 
         print(gen_out.shape)
@@ -165,7 +166,7 @@ def teste2():
             i = i + 1
 
 if __name__ == '__main__':
-    teste2()
-    #test()
+    #teste2()
+    test()
 
 

@@ -13,3 +13,18 @@ def save_checkpoint(model, optimizer, filename="my_checkpoint.pth.tar"):
         "optimizer": optimizer.state_dict(),
     }
     torch.save(checkpoint, filename)
+
+def plot_examples(low_res_folder, gen):
+    files = os.listdir(low_res_folder)
+
+    gen.eval()
+    for file in files:
+        image = Image.open("/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/SRGAN/fake" + file)
+        with torch.no_grad():
+            upscaled_img = gen(
+                config.test_transform(image=np.asarray(image))["image"]
+                .unsqueeze(0)
+                .to(config.DEVICE)
+            )
+        save_image(upscaled_img * 0.5 + 0.5, f"/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/SRGAN/fake/{file}")
+    gen.train()
