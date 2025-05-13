@@ -21,9 +21,9 @@ class MyImageFolder(Dataset):
     def __getitem__(self, index):
         img_file, label = self.data[index]
         root_and_dir = os.path.join(self.root_dir, self.class_names[label])
-        image = np.array(Image.open(os.path.join(root_and_dir, img_file)))
-        #return image
-
+        image = Image.open(os.path.join(root_and_dir, img_file))
+        image = image.convert("RGB")
+        image = np.array(image)
         high_res = config.highres_transform(image=image)["image"]
         low_res = config.lowres_transform(image=image)["image"]
         return high_res, low_res

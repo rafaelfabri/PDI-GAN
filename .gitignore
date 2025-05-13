@@ -1,1 +1,5 @@
 /Images
+/SRGAN/fake
+/SRGAN/real
+disc.pth.tar
+gen.pth.tar
