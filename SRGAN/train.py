@@ -21,6 +21,7 @@ torch.backends.cudnn.benchmark = True
 def train_fn(loader, disc, gen, opt_gen, opt_disc, mse, bce, vgg_loss, last_epoch, epoch):
     loop = tqdm(loader, leave=True)
     i = 0 
+    tam = len(loop)
     for idx, (low_res, high_res) in enumerate(loop):
         high_res = high_res.to(config.DEVICE)
         low_res = low_res.to(config.DEVICE)
@@ -50,9 +51,10 @@ def train_fn(loader, disc, gen, opt_gen, opt_disc, mse, bce, vgg_loss, last_epoc
         opt_gen.step()
 
         i = i + 1
-        if last_epoch == (epoch + 1):
+        if last_epoch == (epoch + 1) and i == tam:
             print(i)
-            plot_examples("/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/SRGAN/fake", gen)
+            plot_examples("/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/archive_teste", gen)
+
             #print(fake[0][0][:][:])
             #fake_np = fake[0][0][:][:].detach().cpu().numpy()
             #print(fake_np)
@@ -63,20 +65,11 @@ def train_fn(loader, disc, gen, opt_gen, opt_disc, mse, bce, vgg_loss, last_epoc
 
 def main():
 
-    #path_train = '/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/train'
 
-    # transform = torchvision.transforms.Compose([
-    #     torchvision.transforms.Resize((48,48)),
-    #     v2.RandomHorizontalFlip(p=0.5),
-    #     #v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    #     torchvision.transforms.ToTensor()
-    # ])
-
-    dataset = MyImageFolder(root_dir="/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/train__")
-    dataloader = DataLoader(dataset=dataset, batch_size=1, shuffle=False)
-
-    gen = Generator(in_channels=1).to(config.DEVICE)
-    disc = Discriminator(in_channels=1).to(config.DEVICE)
+    dataset = MyImageFolder(root_dir="/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/archive")
+    dataloader = DataLoader(dataset=dataset, batch_size=16, shuffle=False)
+    gen = Generator(in_channels=3).to(config.DEVICE)
+    disc = Discriminator(in_channels=3).to(config.DEVICE)
     opt_gen = optim.Adam(gen.parameters(), lr=config.LEARNING_RATE, betas=(0.9, 0.999))
     opt_disc = optim.Adam(disc.parameters(), lr=config.LEARNING_RATE, betas=(0.9, 0.999))
     mse = nn.MSELoss()

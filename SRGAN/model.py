@@ -4,25 +4,6 @@ import torchvision
 from torch.utils.data import DataLoader
 from torchvision.transforms import v2
 
-class ReadDataSet():
-    def __init__(self, path_train = '', path_validation = ''):
-        self.path_train = path_train
-        self.path_validation = path_validation
-
-    def Read(self):
-        transform = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((48,48)),
-            v2.RandomHorizontalFlip(p=0.5),
-            #v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            torchvision.transforms.ToTensor()
-        ])
-
-        dataset = torchvision.datasets.ImageFolder(root = self.path_train, transform=transform)
-
-        dataloader = DataLoader(dataset=dataset, batch_size=32, shuffle=False)
-
-        return dataloader
-
 
 
 class ConvBlock(nn.Module):
@@ -87,7 +68,7 @@ class ResidualBlock(nn.Module):
         return out + x
 
 class Generator(nn.Module):
-    def __init__(self, in_channels=1, num_channels = 64, num_blocks=16):
+    def __init__(self, in_channels=3, num_channels = 64, num_blocks=16):
         super().__init__()
         self.initial = ConvBlock(in_channels, num_channels, kernel_size=9, stride=1, padding=4, use_bn=False)
         self.residuals = nn.Sequential(*[ResidualBlock(num_channels) for _ in range(num_blocks)])
@@ -100,7 +81,7 @@ class Generator(nn.Module):
         x = self.residuals(initial)
         x = self.convblock(x) + initial
         x = self.upsamples(x)
-        return torch.tanh(self.final(x))
+        return torch.relu(self.final(x))
 
 class Discriminator(nn.Module):
     def __init__(self, in_channels=3, features=[64, 64, 128, 128, 256, 256, 512, 512]):
