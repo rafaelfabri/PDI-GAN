@@ -130,7 +130,6 @@ def teste2():
     with torch.amp.autocast("cuda"):
         path_train = '/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/train'
         path_validation = '/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/validation/'
-        read = ReadDataSet(path_train, path_validation)
         dataloader = read.Read()
         i = 0 
         for images, labels in dataloader:

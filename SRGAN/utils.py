@@ -19,8 +19,7 @@ def plot_examples(low_res_folder, gen):
     print(files)
     gen.eval()
     for file in files:
-        print(low_res_folder + file)
-        image = Image.open(low_res_folder + file)
+        image = Image.open(low_res_folder + file).convert('RGB')
         with torch.no_grad():
             upscaled_img = gen(
                 config.test_transform(image=np.asarray(image))["image"]

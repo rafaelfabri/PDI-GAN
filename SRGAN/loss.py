@@ -15,11 +15,11 @@ class VGGLoss(nn.Module):
 
     def forward(self, input, target):
 
-        #converter foto in_channel igual 1 mandar para 3 channel
-        # if input.shape[1] == 1:
-        #     input = input.repeat(1, 3, 1, 1)
-        # if target.shape[1] == 1:
-        #     target = target.repeat(1, 3, 1, 1)
+        # converter foto in_channel igual 1 mandar para 3 channel
+        if input.shape[1] == 1:
+            input = input.repeat(1, 3, 1, 1)
+        if target.shape[1] == 1:
+            target = target.repeat(1, 3, 1, 1)
 
         vgg_input_features = self.vgg(input)
         vgg_target_features = self.vgg(target)
