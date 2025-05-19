@@ -5,10 +5,11 @@ from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 
 class MyImageFolder(Dataset):
-    def __init__(self, root_dir):
+    def __init__(self, root_dir, new_size):
         super(MyImageFolder, self).__init__()
         self.data = []
         self.root_dir = root_dir
+        self.new_size = new_size
         self.class_names = os.listdir(root_dir)
 
         for index, name in enumerate(self.class_names):
@@ -22,8 +23,11 @@ class MyImageFolder(Dataset):
         img_file, label = self.data[index]
         root_and_dir = os.path.join(self.root_dir, self.class_names[label])
         image = Image.open(os.path.join(root_and_dir, img_file))
+        image = image.resize(self.new_size)
         image = image.convert("RGB")
         image = np.array(image)
+        #print(image.shape)
+
         high_res = config.highres_transform(image=image)["image"]
         low_res = config.lowres_transform(image=image)["image"]
         return high_res, low_res

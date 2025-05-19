@@ -14,7 +14,7 @@ def save_checkpoint(model, optimizer, filename="my_checkpoint.pth.tar"):
     }
     torch.save(checkpoint, filename)
 
-def plot_examples(low_res_folder, gen):
+def plot_examples(low_res_folder, gen, i, epoch):
     files = os.listdir(low_res_folder)
     print(files)
     gen.eval()
@@ -26,6 +26,9 @@ def plot_examples(low_res_folder, gen):
                 .unsqueeze(0)
                 .to(config.DEVICE)
             )
-        print(upscaled_img  * 0.5 + 0.5)
-        save_image(upscaled_img * 0.5 + 0.5, f"/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/saved/{file}")
+        #print(upscaled_img  * 0.5 + 0.5)
+        newpath = f"/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/saved/batch_{i}_epoch_{epoch}"
+        if not os.path.exists(newpath):
+            os.makedirs(newpath)
+        save_image(upscaled_img * 0.5 + 0.5,  f"{newpath}/{file}")
     gen.train()

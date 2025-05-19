@@ -59,23 +59,23 @@ def train_fn(loader, disc, gen, opt_gen, opt_disc, mse, bce, vgg_loss, last_epoc
         lista_epoch.append(epoch)
 
         
-
+        plot_examples("/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/archive_teste/Erica/", gen, i, epoch)
         i = i + 1
-        if last_epoch == (epoch + 1) and i == tam:
-            print(i) 
-            plot_examples("/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/validation__/Disgust/", gen)
+        # if last_epoch == (epoch + 1) and i == tam:
+        #     print(i) 
+        #     plot_examples("/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/archive_teste/Erica/", gen)
 
-            #print(fake[0][0][:][:])
-            #fake_np = fake[0][0][:][:].detach().cpu().numpy()
-            #print(fake_np)
-            #image = Image.fromarray(np.uint8(fake_np))
-            ##image.save(f"SRGAN/fake/{i}.png")
-            #print('fake', low_res)
-            #print('fake', fake)
+            # print(fake[0][0][:][:])
+            # fake_np = fake[0][0][:][:].detach().cpu().numpy()
+            # print(fake_np)
+            # image = Image.fromarray(np.uint8(fake_np))
+            # #image.save(f"SRGAN/fake/{i}.png")
+            # print('fake', low_res)
+            # print('fake', fake)
 
-    print(lista_epoch)
-    print(lista_vgg_loss)
-    print(lista_gen_loss)
+    # print(lista_epoch)
+    # print(lista_vgg_loss)
+    # print(lista_gen_loss)
 
     df = pd.DataFrame.from_dict({'epoch':lista_epoch, 'vgg_loss':lista_vgg_loss, 'gen_loss':lista_gen_loss}, orient='columns')
     return df
@@ -83,8 +83,8 @@ def train_fn(loader, disc, gen, opt_gen, opt_disc, mse, bce, vgg_loss, last_epoc
 def main():
 
 
-    dataset = MyImageFolder(root_dir="/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/validation__")
-    dataloader = DataLoader(dataset=dataset, batch_size=16, shuffle=False)
+    dataset = MyImageFolder(root_dir="/home/rafaelfabrichimidt/Documentos/projetos/Mestrado/PDI/artigo/Images/archive", new_size=(161,161))
+    dataloader = DataLoader(dataset=dataset, batch_size=8, shuffle=False)
     gen = Generator(in_channels=3).to(config.DEVICE)
     disc = Discriminator(in_channels=3).to(config.DEVICE)
     opt_gen = optim.Adam(gen.parameters(), lr=config.LEARNING_RATE, betas=(0.9, 0.999))
